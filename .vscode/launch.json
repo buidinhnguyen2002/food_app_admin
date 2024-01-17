@@ -1,0 +1,32 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "food_app_admin",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "food_app_admin (profile mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "food_app_admin (release mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "Flutter",
+            "request": "attach",
+            "type": "dart",
+            "deviceId": "2109119DG",
+            "observatoryUri": "192.168.1.11:57148"
+        }
+    ]
+}
