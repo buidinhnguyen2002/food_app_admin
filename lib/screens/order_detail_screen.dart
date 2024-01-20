@@ -1,13 +1,73 @@
+import 'package:esc_pos_printer/esc_pos_printer.dart';
+import 'package:esc_pos_utils/esc_pos_utils.dart';
+import 'package:final_project_admin/models/food_order.dart';
+import 'package:final_project_admin/models/order.dart';
 import 'package:final_project_admin/providers/order_provider.dart';
+import 'package:final_project_admin/screens/print_bill_screen.dart';
+import 'package:final_project_admin/utils/colors.dart';
+import 'package:final_project_admin/utils/functions.dart';
 import 'package:final_project_admin/utils/widget.dart';
 import 'package:final_project_admin/widget/process_timeline.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:timelines/timelines.dart';
+import 'dart:typed_data';
+import 'package:image/image.dart' as img;
 
 class OrderDetailScreen extends StatelessWidget {
   const OrderDetailScreen({super.key});
   static const routeName = "/order-detail-screen";
+
+  Future<void> connectAndPrint(Order order, List<FoodOrder> foodOrders) async {
+    final profile = await CapabilityProfile.load();
+    final printer = NetworkPrinter(PaperSize.mm80, profile);
+
+    try {
+      final PosPrintResult result =
+          await printer.connect('192.168.1.5', port: 9100);
+      if (result == PosPrintResult.success) {
+        await printReceipt(printer, order, foodOrders);
+        printer.disconnect();
+      } else {
+        print('Failed to connect: ${result.msg}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
+  Future<void> printReceipt(
+      NetworkPrinter printer, Order order, List<FoodOrder> foodOrders) async {
+    printer.text(order.name, styles: PosStyles(bold: true), linesAfter: 1);
+    printer.text('123 Main Street', styles: PosStyles(align: PosAlign.center));
+    printer.text('Saigon, VN', styles: PosStyles(align: PosAlign.center));
+    printer.text('Phone: (+84) 376681323',
+        styles: PosStyles(align: PosAlign.center));
+    printer.text('--------------------------------');
+
+    // Print items
+    printer.text('Items', styles: const PosStyles(underline: true));
+    double totalAmount = 0;
+    for (int i = 0; i < foodOrders.length; i++) {
+      final foodOrder = foodOrders[i];
+      totalAmount += foodOrder.quantityOrdered * foodOrder.price;
+      printer.text(
+          '${i + 1}. ${foodOrder.foodName} X ${foodOrder.quantityOrdered}              ${foodOrder.price}VNĐ');
+    }
+    printer.text('--------------------------------');
+
+    // Print totals
+
+    printer.text('Total:                   $totalAmount',
+        styles: const PosStyles(align: PosAlign.right, bold: true));
+    printer.text('--------------------------------');
+
+    // Print footer
+    printer.text('Thank you for dining with us!',
+        styles: PosStyles(align: PosAlign.center));
+    printer.text('--------------------------------');
+  }
+
   @override
   Widget build(BuildContext context) {
     final Map<String, dynamic>? args =
@@ -20,6 +80,22 @@ class OrderDetailScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.background,
         title: Text(order.name),
+        actions: [
+          IconButton(
+            tooltip: "Print Bill",
+            onPressed: () {
+              // Print bluetooth
+              // Navigator.of(context).pushNamed(PrintBillScreen.routeName);
+              // print wifi
+              connectAndPrint(order, foodOrders);
+            },
+            icon: const Icon(
+              Icons.print,
+              color: AppColors.primaryColor,
+            ),
+          ),
+          BoxEmpty.sizeBox10,
+        ],
       ),
       body: Column(
         children: [

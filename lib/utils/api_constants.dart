@@ -1,7 +1,7 @@
 class API {
-  static const l1 = '192.168.1.11';
+  static const l1 = '192.168.1.5';
   static const l2 = '192.168.0.193';
-  static const feel = '192.168.1.30';
+  static const feel = '192.168.1.40';
   static const baseUrlAPI = 'http://$l1:80/food_app';
   static const signIn = '$baseUrlAPI/authentication/sign-in.php';
   static const signUp = '$baseUrlAPI/authentication/sign-up.php';

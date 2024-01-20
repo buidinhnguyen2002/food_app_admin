@@ -7,6 +7,7 @@ import 'package:final_project_admin/screens/dashboard_screen.dart';
 import 'package:final_project_admin/screens/food_manager_screen.dart';
 import 'package:final_project_admin/screens/order_detail_screen.dart';
 import 'package:final_project_admin/screens/order_manager_screen.dart';
+import 'package:final_project_admin/screens/print_bill_screen.dart';
 import 'package:final_project_admin/screens/product_detail_screen.dart';
 import 'package:final_project_admin/screens/restaurant_detail_screen.dart';
 import 'package:final_project_admin/screens/restaurant_manager_screen.dart';
@@ -44,6 +45,7 @@ class MyApp extends StatelessWidget {
             RestaurantManagerScreen.routeName: (ctx) =>
                 const RestaurantManagerScreen(),
             RestaurantDetail.routeName: (ctx) => const RestaurantDetail(),
+            PrintBillScreen.routeName: (ctx) => const PrintBillScreen(),
           },
         ),
       ),

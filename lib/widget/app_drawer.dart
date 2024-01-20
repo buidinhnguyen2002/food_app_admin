@@ -9,13 +9,17 @@ import 'package:flutter/material.dart';
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
   Widget appDrawerItem(
-      BuildContext context, String title, IconData icon, VoidCallback onPress) {
+      BuildContext context, String title, IconData icon, VoidCallback onPress,
+      {Color? colorText}) {
     return ListTile(
       leading: Icon(
         icon,
-        color: Theme.of(context).colorScheme.primary,
+        color: colorText ?? Theme.of(context).colorScheme.primary,
       ),
-      title: Text(title),
+      title: Text(
+        title,
+        style: TextStyle(color: colorText ?? AppColors.black),
+      ),
       onTap: onPress,
     );
   }
@@ -60,7 +64,8 @@ class AppDrawer extends StatelessWidget {
           appDrawerItem(
               context, "Account manager", Icons.manage_accounts, () {}),
           const Divider(),
-          appDrawerItem(context, "Logout", Icons.logout, () {}),
+          appDrawerItem(context, "Logout", Icons.logout, () {},
+              colorText: AppColors.red),
         ],
       ),
     );

@@ -24,6 +24,31 @@ class OrderProvider with ChangeNotifier {
     return _foodOrders;
   }
 
+  double getRevenueMilestone(List<String> restaurantIds) {
+    double result;
+    // List<double> temp = getRevenueRestaurant(restaurantIds);
+    List<double> temp = [];
+    restaurantIds.forEach((id) {
+      temp.add(getRevenueRestaurantById(id));
+    });
+    result = temp.reduce((max, current) => max > current ? max : current);
+    return result;
+  }
+
+  double getRevenueRestaurantById(String id) {
+    double sum = _myOrder.where((o) => o.restaurantId == id).toList().fold(
+        0, (previousValue, current) => previousValue + current.totalAmount);
+    return sum;
+  }
+
+  List<double> getRevenueRestaurant(List<String> restaurantIds) {
+    List<double> temp = [];
+    restaurantIds.forEach((id) {
+      temp.add(getRevenueRestaurantById(id));
+    });
+    return temp;
+  }
+
   List<Order> get activeOrder {
     return _myOrder.where((order) => order.status == 'active').toList();
   }
